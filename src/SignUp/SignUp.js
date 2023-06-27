@@ -1,8 +1,51 @@
 import React from "react";
 import Lottie from "react-lottie-player";
 import lottieJson from "../../src/utilities/animation/signUpAnimation.json";
+import useForm from "../hooks/useForm";
+import { signup } from "../utilities/api/api";
+import { toast } from "react-hot-toast";
 
 const SignUp = () => {
+  const { form, onChangeHandler } = useForm({
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
+
+  const signupFormSubmitHandler = async (e) => {
+    e.preventDefault();
+
+    if (form.password !== form.confirmPassword) {
+      toast.error("Both password fields should match");
+    } else {
+      try {
+        const res = await fetch(
+          `${signup}AIzaSyBSdX2S-hpu2VelxVurSEofcsXSBairYvk`,
+          {
+            method: "POST",
+            body: JSON.stringify({
+              email: form.email,
+              password: form.password,
+            }),
+            headers: {
+              "content-type": "application/json",
+            },
+          }
+        );
+        const data = await res.json();
+        console.log(data);
+        if (data.idToken) {
+          toast.success("Signup Successful");
+        } else {
+          return new Error();
+        }
+      } catch {
+        toast.error("Something went wrong Please try again");
+      }
+    }
+  };
+
+  console.log(form);
   return (
     <div className="grid grid-flow-col W-full h-full  bg-[#F6F8FC] ">
       <div className="col-span-2  hidden md:block  flex items-center">
@@ -14,7 +57,11 @@ const SignUp = () => {
         />
       </div>
       <div className="col-span-10  h-screen items-center flex justify-center p-4">
-        <form className="flex flex-col items-center space-y-5 relative z-1  lg:w-3/4">
+        <form
+          className="flex flex-col items-center space-y-5 relative z-1  lg:w-3/4 "
+          onSubmit={signupFormSubmitHandler}
+        >
+            
           <div className="z-30 absolute flex justify-center items-center"></div>
 
           <div className="my-5 text-5xl font-bold ">MAIL BOX</div>
@@ -22,22 +69,28 @@ const SignUp = () => {
             type="email"
             name="email"
             id="email"
+            required
             className="w-full px-2 py-1 bg-gray-100 border rounded-sm outline-none hover:bg-transparent focus:bg-transparent placeholder:text-sm focus:border-blue-400"
             placeholder="Email"
+            onChange={onChangeHandler}
           />
           <input
+            required
             type="password"
             name="password"
             id="password"
             placeholder="Password"
             className="w-full px-2 py-1 transition bg-gray-100 border rounded-sm outline-none hover:bg-transparent focus:bg-transparent placeholder:text-sm focus:border-blue-400"
+            onChange={onChangeHandler}
           />
           <input
+            required
             type="password"
-            name="password"
-            id="password"
+            name="confirmPassword"
+            id="confirmPassword"
             placeholder="Confirm Password"
             className="w-full px-2 py-1 transition bg-gray-100 border rounded-sm outline-none hover:bg-transparent focus:bg-transparent placeholder:text-sm focus:border-blue-400"
+            onChange={onChangeHandler}
           />
           <button
             type="submit"

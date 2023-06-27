@@ -1,0 +1,1 @@
+export const signup="https://identitytoolkit.googleapis.com/v1/accounts:signUp?key="
