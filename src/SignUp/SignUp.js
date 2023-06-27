@@ -4,13 +4,19 @@ import lottieJson from "../../src/utilities/animation/signUpAnimation.json";
 import useForm from "../hooks/useForm";
 import { signup } from "../utilities/api/api";
 import { toast } from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
+import { loadingAction } from "../store/loadingSlice";
+import loader from "../utilities/animation/spinner.json";
 
 const SignUp = () => {
+  const dispatch = useDispatch();
   const { form, onChangeHandler } = useForm({
     email: "",
     password: "",
     confirmPassword: "",
   });
+
+  const isLoading = useSelector((state) => state.loading.isLoading);
 
   const signupFormSubmitHandler = async (e) => {
     e.preventDefault();
@@ -19,6 +25,7 @@ const SignUp = () => {
       toast.error("Both password fields should match");
     } else {
       try {
+        dispatch(loadingAction(true));
         const res = await fetch(
           `${signup}AIzaSyBSdX2S-hpu2VelxVurSEofcsXSBairYvk`,
           {
@@ -33,6 +40,8 @@ const SignUp = () => {
           }
         );
         const data = await res.json();
+        dispatch(loadingAction(false));
+
         console.log(data);
         if (data.idToken) {
           toast.success("Signup Successful");
@@ -56,12 +65,17 @@ const SignUp = () => {
           className=" md:h-screen "
         />
       </div>
-      <div className="col-span-10  h-screen items-center flex justify-center p-4">
+      <div className="col-span-10  h-screen items-center flex justify-center relative p-4">
+        {isLoading && (
+          <div className="z-999999999 absolute ">
+            <Lottie loop animationData={loader} play className=" h-40  " />
+          </div>
+        )}
+
         <form
-          className="flex flex-col items-center space-y-5 relative z-1  lg:w-3/4 "
+          className="flex flex-col items-center space-y-5  z-1  lg:w-3/4 "
           onSubmit={signupFormSubmitHandler}
         >
-            
           <div className="z-30 absolute flex justify-center items-center"></div>
 
           <div className="my-5 text-5xl font-bold ">MAIL BOX</div>
