@@ -2,6 +2,9 @@ import { Toaster } from "react-hot-toast";
 import Login from "./Login/Login";
 import SignUp from "./SignUp/SignUp";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import Dashboard from "./pages/Dashboard";
+import Root from "./Root";
+import Inbox from "./pages/Inbox";
 
 export default function App() {
   const router = createBrowserRouter([
@@ -10,7 +13,21 @@ export default function App() {
       element: <Login />,
     },
     {
-      path: "signup",
+      path: "/Root",
+      element: <Root />,
+      children: [
+        {
+          path: "/Root/dashboard",
+          element: <Dashboard />,
+        },
+        {
+          path: "/Root/inbox",
+          element: <Inbox />,
+        },
+      ],
+    },
+    {
+      path: "/signup",
       element: <SignUp />,
     },
   ]);
@@ -18,7 +35,8 @@ export default function App() {
   return (
     <>
       <RouterProvider router={router} />
-       <Toaster />
+
+      <Toaster />
     </>
   );
 }

@@ -7,9 +7,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { loadingAction } from "../store/loadingSlice";
 import { signIn } from "../utilities/api/api";
 import { toast } from "react-hot-toast";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Login = () => {
+ const navigate= useNavigate()
   const dispatch = useDispatch();
   const isLoading = useSelector((state) => state.loading.isLoading);
 
@@ -47,6 +48,7 @@ const Login = () => {
     } catch (error) {
       toast.error(error.message);
     }
+    navigate('/Root/dashboard');
     resetData();
   };
   return (
@@ -90,10 +92,11 @@ const Login = () => {
             type="submit"
             className="bg-[#0095F6] py-1 cursor-pointer text-white active:scale-95 transform transition w-full disabled:bg-opacity-50 disabled:scale-100 rounded text-sm font-semibold"
             //   disabled={!isDisabled}
+
           >
             SIGN IN
           </button>
-          <Link to="signup" className="text-sm font-medium text-blue-500">
+          <Link to="/signup" className="text-sm font-medium text-blue-500">
             CREATE ACCOUNT ?
           </Link >
         </form>
