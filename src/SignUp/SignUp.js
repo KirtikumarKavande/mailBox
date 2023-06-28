@@ -7,6 +7,7 @@ import { toast } from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { loadingAction } from "../store/loadingSlice";
 import loader from "../utilities/animation/spinner.json";
+import { Link } from "react-router-dom";
 
 const SignUp = () => {
   const dispatch = useDispatch();
@@ -39,22 +40,22 @@ const SignUp = () => {
             },
           }
         );
+        console.log(res);
+
         const data = await res.json();
         dispatch(loadingAction(false));
 
-        console.log(data);
         if (data.idToken) {
           toast.success("Signup Successful");
         } else {
-          return new Error();
+          toast.error(data.error.message);
         }
-      } catch {
-        toast.error("Something went wrong Please try again");
+      } catch(error) {
+        toast.error(error.message);
       }
     }
   };
 
-  console.log(form);
   return (
     <div className="grid grid-flow-col W-full h-full  bg-[#F6F8FC] ">
       <div className="col-span-2  hidden md:block  flex items-center">
@@ -67,13 +68,13 @@ const SignUp = () => {
       </div>
       <div className="col-span-10  h-screen items-center flex justify-center relative p-4">
         {isLoading && (
-          <div className="z-999999999 absolute ">
+          <div className="z-30 absolute ">
             <Lottie loop animationData={loader} play className=" h-40  " />
           </div>
         )}
 
         <form
-          className="flex flex-col items-center space-y-5  z-1  lg:w-3/4 "
+          className="flex flex-col items-center space-y-5 relative z-1 w-full p-1 lg:w-3/4 "
           onSubmit={signupFormSubmitHandler}
         >
           <div className="z-30 absolute flex justify-center items-center"></div>
@@ -113,6 +114,9 @@ const SignUp = () => {
           >
             SIGN UP
           </button>
+          <Link to=".." className="text-sm font-medium text-blue-500">
+           HAVE ACCOUNT?
+          </Link >
         </form>
       </div>
     </div>
