@@ -5,6 +5,7 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import Dashboard from "./pages/Dashboard";
 import Root from "./Root";
 import Inbox from "./pages/Inbox";
+import ComposeMail from "./pages/ComposeMail";
 
 export default function App() {
   const router = createBrowserRouter([
@@ -23,6 +24,9 @@ export default function App() {
         {
           path: "/Root/inbox",
           element: <Inbox />,
+        }, {
+          path: "/Root/composemail",
+          element: <ComposeMail/>,
         },
       ],
     },

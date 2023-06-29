@@ -36,6 +36,9 @@ const Login = () => {
         }
       );
       const data = await res.json();
+      console.log(data)
+      localStorage.setItem('email',data.email);
+      localStorage.setItem('token',data.idToken)
       dispatch(loadingAction(false));
 
       console.log(data);
@@ -48,7 +51,7 @@ const Login = () => {
     } catch (error) {
       toast.error(error.message);
     }
-    navigate('/Root/dashboard');
+    navigate('/Root/inbox');
     resetData();
   };
   return (
