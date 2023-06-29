@@ -37,21 +37,23 @@ const Login = () => {
       );
       const data = await res.json();
       console.log(data)
-      localStorage.setItem('email',data.email);
-      localStorage.setItem('token',data.idToken)
+     
       dispatch(loadingAction(false));
 
       console.log(data);
 
       if (data.idToken) {
         toast.success("Login Successful");
+        localStorage.setItem('email',data.email);
+        localStorage.setItem('token',data.idToken)
+        navigate('/Root/inbox');
       } else {
         toast.error(data.error.message);
       }
     } catch (error) {
       toast.error(error.message);
     }
-    navigate('/Root/inbox');
+   
     resetData();
   };
   return (
