@@ -124,7 +124,7 @@ const Root = () => {
       <Sidebar />
 
       <Header />
-      <div className="mt-[5rem] md:ml-[16rem] bg-[#FFFFFF] min-h-screen">
+      <div className="mt-[5rem] md:ml-[16rem] bg-[#FFFFFF] min-h-screen ">
         <Outlet />
       </div>
     </div>
