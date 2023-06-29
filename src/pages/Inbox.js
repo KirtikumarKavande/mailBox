@@ -27,13 +27,34 @@ const Inbox = () => {
         email: data[key].senderEmail,
         subject: data[key].subject,
         message: data[key].messageFromSender,
+        read: data[key].read,
+        receiverEmail: data[key].receiverEmail,
       });
     }
     setInboxMail(updatedArray);
   };
-  useEffect(() => {
-    dispatch(messageAction(inboxMail));
-  }, [inboxMail, dispatch]);
+  useEffect(()=>{
+    dispatch(messageAction(inboxMail))
+
+  },[inboxMail,dispatch])
+
+  const handleMailClick = (mail) => {
+    navigate(`/Root/message/${mail.id}`);
+    fetch(`${databaseUrl}/email/${mail.id}.json`, {
+      method: "PUT",
+      body: JSON.stringify({
+        senderEmail: mail.email,
+        receiverEmail: mail.receiverEmail,
+        subject: mail.subject,
+        messageFromSender: mail.message,
+        id:mail.id,
+        read: true,
+      }),
+      headers: {
+        "content-type": "application/json",
+      },
+    });
+  };
 
   return (
     <div className="cursor-pointer">
@@ -42,10 +63,10 @@ const Inbox = () => {
           <div
             key={mail.id}
             onClick={() => {
-              navigate(`/Root/message/${mail.id}`);
+              handleMailClick(mail);
             }}
           >
-            <div className="w-full flex pl-2 border border-gray-200 shadow-sm border-l-white border-r-white p-1 items-center  ">
+            <div className="w-full flex pl-2 border border-gray-200 hover:shadow-md hover:border-r-gray-200 hover:border-l-gray-200  border-l-white border-r-white p-1 items-center  ">
               <div className="w-1/3 overflow-hidden lg:w-1/3 font-medium  md:font-semibold ">
                 {mail.email}
               </div>

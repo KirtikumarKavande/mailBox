@@ -6,9 +6,12 @@ import { AiOutlineSend } from "react-icons/ai";
 import useForm from "../hooks/useForm";
 import { toast } from "react-hot-toast";
 import { databaseUrl } from "../utilities/api/api";
+import { useDispatch } from "react-redux";
+import { messageAction } from "../store/completeMessegeSlice";
 
 
 const ComposeMail = () => {
+  const dispatch=useDispatch()
 
   const email= localStorage.getItem('email')
 
@@ -25,6 +28,7 @@ const ComposeMail = () => {
       receiverEmail: form.email,
       subject: form.subject,
       messageFromSender: value,
+      read:false
     };
 
     const sendEmail = async () => {
@@ -36,6 +40,7 @@ const ComposeMail = () => {
         },
       });
       if (res.ok) {
+        console.log('----------------------',obj)
         toast.success("Email sent successfully");
       } else {
         toast.error("something went wrong try again");
