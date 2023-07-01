@@ -7,6 +7,9 @@ import Root from "./Root";
 import Inbox from "./pages/Inbox";
 import ComposeMail from "./pages/ComposeMail";
 import CompleteMessegeRead from "./pages/CompleteMessegeRead";
+import Messages from "./UI/Messages";
+import SentMail from "./pages/SentMail";
+import SentInboxMail from "./pages/CompleteSentMail";
 
 export default function App() {
   const router = createBrowserRouter([
@@ -37,6 +40,15 @@ export default function App() {
           path: "/Root/message/:id",
           element: <CompleteMessegeRead/>,
         },
+        {
+          path: "/Root/sentMessages",
+          element: <SentMail/>,
+        },
+        {
+          path: "/Root/sentInbox/:id",
+          element: <SentInboxMail/>,
+        },
+        
       ],
     },
     {

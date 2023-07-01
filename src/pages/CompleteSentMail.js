@@ -5,19 +5,24 @@ import { useDispatch, useSelector } from "react-redux";
 import { messageAction } from "../store/completeMessegeSlice";
 import { BsCircleFill } from "react-icons/bs";
 import { TiDeleteOutline } from "react-icons/ti/index";
+import Lottie from "react-lottie-player";
+import lottieJson from "../../src/utilities/animation/nomails.json";
 import NoMails from "../UI/noMails";
 
-const Inbox = () => {
+const SentInboxMail = () => {
   const inboxMail = useSelector((state) => state.message.completeMesseageData);
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const [sentMail, setSentMail] = useState([]);
   useEffect(() => {
     fetchData();
   }, []);
 
   const fetchData = async () => {
     const res = await fetch(
-      `https://mailbox-d3daa-default-rtdb.firebaseio.com/email.json?orderBy="receiverEmail"&equalTo=${JSON.stringify(
+      `https://mailbox-d3daa-default-rtdb.firebaseio.com/email.json?orderBy="senderEmail"&equalTo=${JSON.stringify(
         localStorage.getItem("email")
       )}`
     );
@@ -27,46 +32,33 @@ const Inbox = () => {
     for (let key in data) {
       updatedArray.push({
         id: key,
-        email: data[key].senderEmail,
+        email: data[key].receiverEmail,
         subject: data[key].subject,
         message: data[key].messageFromSender,
         read: data[key].read,
         receiverEmail: data[key].receiverEmail,
       });
     }
-    dispatch(messageAction(updatedArray));
+    console.log("sent email", updatedArray);
+    setSentMail(updatedArray);
   };
 
   const handleMailClick = (mail) => {
     navigate(`/Root/message/${mail.id}`);
-    fetch(`${databaseUrl}/email/${mail.id}.json`, {
-      method: "PUT",
-      body: JSON.stringify({
-        senderEmail: mail.email,
-        receiverEmail: mail.receiverEmail,
-        subject: mail.subject,
-        messageFromSender: mail.message,
-        id: mail.id,
-        read: true,
-      }),
-      headers: {
-        "content-type": "application/json",
-      },
-    });
   };
   const deleteMail = (id) => {
-    const updatedInbox = inboxMail.filter((item) => {
+    const updatedInbox = sentMail.filter((item) => {
       return item.id !== id;
     });
-
-    dispatch(messageAction(updatedInbox));
+    setSentMail(updatedInbox);
     fetch(`${databaseUrl}/email/${id}.json`, {
       method: "DELETE",
     });
   };
 
   console.log("inbox", inboxMail);
-  if (inboxMail.length === 0) {
+
+  if (sentMail.length === 0) {
     return (
       <NoMails/>
     );
@@ -74,8 +66,8 @@ const Inbox = () => {
 
   return (
     <div className="cursor-pointer">
-      {inboxMail &&
-        inboxMail.map((mail) => (
+      {sentMail &&
+        sentMail.map((mail) => (
           <div className="flex h-[2.5rem] justify-between border items-center border-gray-200 hover:shadow-md hover:border-r-gray-200 hover:border-l-gray-200  border-l-white border-r-white">
             <div
               key={mail.id}
@@ -85,19 +77,7 @@ const Inbox = () => {
               }}
             >
               <div className="  font-medium flex items-center  md:font-semibold w-1/3 ">
-                {!mail.read ? (
-                  <span>
-                    <BsCircleFill
-                      size={7}
-                      className="text-blue-500 inline-block  "
-                    />
-                  </span>
-                ) : (
-                  <span className="ml-1"></span>
-                )}
-
                 <div className="overflow-hidden text-sm ml-3 ">
-                  {" "}
                   {mail.email}
                 </div>
               </div>
@@ -120,4 +100,4 @@ const Inbox = () => {
   );
 };
 
-export default Inbox;
+export default SentInboxMail;
