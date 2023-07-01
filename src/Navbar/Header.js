@@ -8,7 +8,7 @@ const Header = () => {
 
   return (
     <div>
-      <header className="fixed top-0 z-10 flex items-center justify-around w-full h-16 bg-[#F6F8FC] shadow-md">
+      <header className="fixed top-0 z-10 flex items-center justify-around w-full h-16 bg-[#F6F8FC] shadow-sm">
         <button
           data-drawer-target="default-sidebar"
           data-drawer-toggle="default-sidebar"

@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { databaseUrl } from "../utilities/api/api";
-import { useNavigate, useParams } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import { messageAction } from "../store/completeMessegeSlice";
+import { BsCircleFill } from "react-icons/bs";
 
 const Inbox = () => {
+  const inboxMail = useSelector((state) => state.message.completeMesseageData);
   const navigate = useNavigate();
-  const [inboxMail, setInboxMail] = useState("");
   const dispatch = useDispatch();
   useEffect(() => {
     fetchData();
@@ -31,12 +32,8 @@ const Inbox = () => {
         receiverEmail: data[key].receiverEmail,
       });
     }
-    setInboxMail(updatedArray);
+    dispatch(messageAction(updatedArray));
   };
-  useEffect(()=>{
-    dispatch(messageAction(inboxMail))
-
-  },[inboxMail,dispatch])
 
   const handleMailClick = (mail) => {
     navigate(`/Root/message/${mail.id}`);
@@ -47,7 +44,7 @@ const Inbox = () => {
         receiverEmail: mail.receiverEmail,
         subject: mail.subject,
         messageFromSender: mail.message,
-        id:mail.id,
+        id: mail.id,
         read: true,
       }),
       headers: {
@@ -55,6 +52,8 @@ const Inbox = () => {
       },
     });
   };
+
+  console.log("inbox", inboxMail);
 
   return (
     <div className="cursor-pointer">
@@ -68,7 +67,18 @@ const Inbox = () => {
           >
             <div className="w-full flex pl-2 border border-gray-200 hover:shadow-md hover:border-r-gray-200 hover:border-l-gray-200  border-l-white border-r-white p-1 items-center  ">
               <div className="w-1/3 overflow-hidden lg:w-1/3 font-medium  md:font-semibold ">
-                {mail.email}
+                {!mail.read ? (
+                  <span>
+                    <BsCircleFill
+                      size={7}
+                      className="text-blue-500 inline-block mr-2"
+                    />
+                  </span>
+                ) : (
+                  <span className="ml-3"></span>
+                )}
+
+                <div className="inline-block"> {mail.email}</div>
               </div>
               <div className="w-2/3  lg:w-2/3 text-sm ml-3">{mail.subject}</div>
             </div>
