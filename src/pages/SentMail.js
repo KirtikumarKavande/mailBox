@@ -9,9 +9,14 @@ import Lottie from "react-lottie-player";
 import lottieJson from "../../src/utilities/animation/nomails.json";
 import NoMails from "../UI/noMails";
 import { sentMessageAction } from "../store/completeSentMessageSlice";
+import useHttp from "../hooks/useHttp";
 
 const SentMail = () => {
-  const sentMail = useSelector((state) => state.sentMessage.completeSentMesseage);
+  const httpFunc = useHttp();
+
+  const sentMail = useSelector(
+    (state) => state.sentMessage.completeSentMesseage
+  );
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -51,17 +56,18 @@ const SentMail = () => {
       return item.id !== id;
     });
     dispatch(sentMessageAction(updatedInbox));
-    
-    fetch(`${databaseUrl}/email/${id}.json`, {
+
+    const getHttpData = (data) => {
+      console.log(data);
+    };
+    const obj = {
       method: "DELETE",
-    });
+    };
+    httpFunc(`${databaseUrl}/email/${id}.json`, obj, getHttpData);
   };
 
-
   if (sentMail.length === 0) {
-    return (
-      <NoMails/>
-    );
+    return <NoMails />;
   }
 
   return (

@@ -6,19 +6,19 @@ import { messageAction } from "../store/completeMessegeSlice";
 import { BsCircleFill } from "react-icons/bs";
 import { TiDeleteOutline } from "react-icons/ti/index";
 import NoMails from "../UI/noMails";
+import useHttp from "../hooks/useHttp";
 
 const Inbox = () => {
+  const httpFunc = useHttp();
   const inboxMail = useSelector((state) => state.message.completeMesseageData);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   useEffect(() => {
-    const id= setInterval(() => {
-      console.log("made api call")
+    const id = setInterval(() => {
       fetchData();
     }, 2000);
 
-
-    return ()=>clearInterval(id)
+    return () => clearInterval(id);
   }, []);
 
   const fetchData = async () => {
@@ -60,15 +60,20 @@ const Inbox = () => {
       },
     });
   };
+
   const deleteMail = (id) => {
     const updatedInbox = inboxMail.filter((item) => {
       return item.id !== id;
     });
-
-    dispatch(messageAction(updatedInbox));
-    fetch(`${databaseUrl}/email/${id}.json`, {
+    const getHttpData = (data) => {
+      console.log(data);
+    };
+    const obj = {
       method: "DELETE",
-    });
+    };
+    httpFunc(`${databaseUrl}/email/${id}.json`, obj, getHttpData);
+    dispatch(messageAction(updatedInbox));
+
   };
 
   console.log("inbox", inboxMail);

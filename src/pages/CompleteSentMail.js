@@ -8,9 +8,14 @@ import { TiDeleteOutline } from "react-icons/ti/index";
 import Lottie from "react-lottie-player";
 import lottieJson from "../../src/utilities/animation/nomails.json";
 import NoMails from "../UI/noMails";
+import useHttp from "../hooks/useHttp";
 
 const SentInboxMail = () => {
+
+  const httpFunc = useHttp();
+
   const inboxMail = useSelector((state) => state.message.completeMesseageData);
+
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -51,9 +56,17 @@ const SentInboxMail = () => {
       return item.id !== id;
     });
     setSentMail(updatedInbox);
-    fetch(`${databaseUrl}/email/${id}.json`, {
+    // fetch(`${databaseUrl}/email/${id}.json`, {
+    //   method: "DELETE",
+    // });
+
+    const getHttpData = (data) => {
+      console.log(data);
+    };
+    const obj = {
       method: "DELETE",
-    });
+    };
+    httpFunc(`${databaseUrl}/email/${id}.json`, obj, getHttpData);
   };
 
   console.log("inbox", inboxMail);
