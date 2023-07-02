@@ -12,7 +12,13 @@ const Inbox = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   useEffect(() => {
-    fetchData();
+    const id= setInterval(() => {
+      console.log("made api call")
+      fetchData();
+    }, 2000);
+
+
+    return ()=>clearInterval(id)
   }, []);
 
   const fetchData = async () => {
@@ -67,9 +73,7 @@ const Inbox = () => {
 
   console.log("inbox", inboxMail);
   if (inboxMail.length === 0) {
-    return (
-      <NoMails/>
-    );
+    return <NoMails />;
   }
 
   return (
